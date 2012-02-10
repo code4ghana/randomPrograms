@@ -1,0 +1,147 @@
+package gui;
+
+import java.util.ArrayList;
+
+import model.Player;
+import model.Question;
+
+import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
+public class QuestionWindow extends ApplicationWindow {
+	Question question;
+	ArrayList<Player> players;
+
+	public QuestionWindow(Question q, ArrayList<Player> players) {
+
+		super(null);
+
+		this.question = q;
+		this.players = players;
+	}
+
+	protected Control createContents(Composite parent) {
+		getShell().setText(""+question.getPoints());
+		Font font1 = new Font(getShell().getDisplay(), "Tahoma", 16, SWT.BOLD
+				| SWT.UNDERLINE_SINGLE);
+		setBlockOnOpen(true);
+		Composite comp = new Composite(parent, SWT.NONE);
+		GridLayout complayout = new GridLayout();
+
+		complayout.numColumns = 4;
+		comp.setLayout(complayout);
+		StyledText quest = new StyledText(comp, SWT.READ_ONLY | SWT.MULTI
+				| SWT.BORDER | SWT.WRAP);
+		quest.setFont(font1);
+		// Text quest=new Text(comp, SWT.READ_ONLY|SWT.MULTI|SWT.BORDER);
+		quest.setBackground(new Color(getShell().getDisplay(), 255, 255, 255));
+		quest.setText(question.getQuestion());
+		GridData gridData = new GridData(GridData.FILL_BOTH);
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalSpan = 4;
+		gridData.verticalSpan = 4;
+		quest.setLayoutData(gridData);
+
+		Button showButton = new Button(comp, SWT.PUSH);
+		final CCombo deductCombo = new CCombo(comp, SWT.DROP_DOWN | SWT.SINGLE
+				| SWT.BORDER);
+		deductCombo.setText("Deduct From:");
+		deductCombo.add("Deduct From:");
+
+		final CCombo addCombo = new CCombo(comp, SWT.DROP_DOWN | SWT.SINGLE
+				| SWT.BORDER);
+		addCombo.setText("Add points To:");
+		addCombo.add("Add points To: ");
+		for (int i = 0; i < players.size(); i++) {
+			deductCombo.add(players.get(i).getName());
+			addCombo.add(players.get(i).getName());
+		}
+		deductCombo.select(0);
+		// deductCombo.notifyListeners(SWT.SELECTED, new Event());
+		deductCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				if (deductCombo.getSelectionIndex() != 0)
+					players.get(deductCombo.getSelectionIndex() - 1)
+							.deductPoints(question.getPoints());
+				deductCombo.remove(deductCombo.getSelectionIndex());
+				deductCombo.select(0);
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		addCombo.select(0);
+		// addCombo.notifyListeners(SWT.SELECTED, new Event());
+		addCombo.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				if (addCombo.getSelectionIndex() != 0)
+					players.get(addCombo.getSelectionIndex() - 1).addPoints(
+							question.getPoints());
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		showButton.setText("show Answer");
+		final StyledText answ = new StyledText(comp, SWT.READ_ONLY | SWT.MULTI
+				| SWT.BORDER | SWT.WRAP);
+		answ.setFont(font1);
+		Color ansColor = getShell().getDisplay()
+				.getSystemColor(SWT.COLOR_GREEN);
+		answ.setForeground(ansColor);
+		answ.setBackground(new Color(getShell().getDisplay(), 255, 255, 255));
+		answ.setText(question.getAnswer());
+		gridData = new GridData(GridData.FILL_BOTH);
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalSpan = 4;
+		gridData.verticalSpan = 4;
+		answ.setLayoutData(gridData);
+		answ.setVisible(false);
+		showButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+				answ.setVisible(true);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		getShell().setSize(700, 700);
+		return parent;
+	}
+
+}

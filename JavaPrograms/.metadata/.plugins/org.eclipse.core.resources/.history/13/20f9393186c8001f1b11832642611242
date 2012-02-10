@@ -1,0 +1,22 @@
+package engine;
+
+import java.util.ArrayList;
+
+import org.eclipse.swt.widgets.Shell;
+
+
+import Model.FaceCard;
+
+public class FlashCardEngine {
+
+	public static void main(String[] args) {
+		FlashCardGui flash = new FlashCardGui();
+
+		ArrayList<FaceCard> cardArr = new ArrayList<FaceCard>(loadCards());
+
+		flash.cardMan = new CardManager(cardArr);
+		// System.out.println(cardMan.getrandCard().getWord());
+		flash.run();
+		flash.notification(new Shell());
+	}
+}

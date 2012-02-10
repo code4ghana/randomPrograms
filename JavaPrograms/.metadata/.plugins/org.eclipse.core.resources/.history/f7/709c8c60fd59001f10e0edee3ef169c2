@@ -1,0 +1,14 @@
+import org.w3c.tidy.Tidy;
+
+
+
+public class VocabGetter {
+	public static void getSome(){
+		Tidy t=new Tidy();
+		
+	}
+	public static void main(String args[]){
+		getSome();
+	}
+
+}

@@ -1,0 +1,18 @@
+all:clean\
+	doubleBuffer
+#compiler options
+CXX = g++
+CXXFLAGS = -Wall -g -o
+#FIle Dependencies
+SRC = doubleBuffer.cpp
+OBJ =  $(addsuffix .o, $(basename $(SRC)))
+
+#libraries
+LIBS =  -lGL -lGLU -lglut 
+
+doubleBuffer:
+	$(CXX) $(CXXFLAGS) doubleBuffer $(SRC) $(LIBS)
+
+clean:
+	rm -rf *~ $(OBJ)
+	

@@ -1,0 +1,11 @@
+import urllib2
+from OutsideLibrary.table_parser import TableParser
+def getTable():
+    response=urllib2.urlopen("http://www.soundkeepers.com/GRE/print.php?n=1").read()
+    p=TableParser()
+    return response,p
+    
+
+r,p=getTable()
+p.feed(r);
+print p.doc[1][0]

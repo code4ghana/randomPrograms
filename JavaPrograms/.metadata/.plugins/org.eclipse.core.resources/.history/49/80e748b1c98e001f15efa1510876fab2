@@ -1,0 +1,11 @@
+
+public class Question {
+String Question;
+String Answer;
+String text;
+int points;
+public Question(String answer,){
+	
+}
+
+}

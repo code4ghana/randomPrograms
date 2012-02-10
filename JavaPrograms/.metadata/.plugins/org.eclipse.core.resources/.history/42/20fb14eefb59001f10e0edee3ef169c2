@@ -1,0 +1,10 @@
+
+
+public class VocabGetter {
+	public static void getSome(){
+	}
+	public static void main(String args[]){
+		getSome();
+	}
+
+}

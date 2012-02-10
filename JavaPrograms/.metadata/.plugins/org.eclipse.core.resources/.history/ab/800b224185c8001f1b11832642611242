@@ -1,0 +1,7 @@
+import Range;
+
+
+public interface SpreadAble {
+public void setRange(Range r);
+public Range getRange();
+}

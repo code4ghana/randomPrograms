@@ -1,0 +1,22 @@
+//Jeff Kusi
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int getDigits(int whole,int index,int count);
+int main(int argc, char** argv)
+{
+  if(argc<4)
+    {
+      printf("Please provide 3 arguments\n");
+    }
+  printf("%i\n",getDigits((int)argv[1],(int)argv[2],(int)argv[3]));
+}
+
+int getDigits(int whole,int index,int count){
+  //check that the number is long enough
+  char* wholeStr=(char*)whole;
+  char retval[count];
+  memcpy(retval,(&wholeStr)+index,count*sizeof(int));
+  return atoi(retval);
+}

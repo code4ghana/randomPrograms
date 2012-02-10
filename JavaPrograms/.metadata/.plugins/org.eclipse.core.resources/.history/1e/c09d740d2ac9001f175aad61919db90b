@@ -1,0 +1,22 @@
+package io;
+
+import java.io.File;
+
+import org.eclipse.swt.widgets.FileDialog;
+
+public class parsePerLine {
+public static void main(String[] args) {
+	String cardspath,cardsname;
+	Shell ashell=new Shell();
+	String[] FILTER_NAMES = { "FlashCards(*FlashCards.xml)" };
+	String[] FILTER_EXTS = { "*.xml" };
+	FileDialog fd = new FileDialog(ashell);
+	fd.setFilterNames(FILTER_NAMES);
+	fd.setFilterExtensions(FILTER_EXTS);
+	fd.setFilterPath(System.getProperty("user.home"));
+	cardspath = fd.open();
+	File cardsFile = new File(cardspath);
+	cardspath = cardsFile.getParent();
+	cardsname = cardsFile.getName();
+}
+}

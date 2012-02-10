@@ -1,0 +1,34 @@
+package io;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+
+public class parsePerLine {
+public static void main(String[] args) {
+	String cardspath,cardsname;
+	Shell ashell=new Shell();
+	String[] FILTER_NAMES = { "FlashCards(*FlashCards.xml)" };
+	String[] FILTER_EXTS = { "*.xml" };
+	FileDialog fd = new FileDialog(ashell);
+	fd.setFilterNames(FILTER_NAMES);
+	fd.setFilterExtensions(FILTER_EXTS);
+	fd.setFilterPath(System.getProperty("user.home"));
+	cardspath = fd.open();
+	File cardsFile = new File(cardspath);
+	cardspath = cardsFile.getParent();
+	cardsname = cardsFile.getName();
+	try {
+		Scanner scan=new Scanner(cardsFile);
+		String scannedLine=scan.nextLine();
+		
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+}
+}

@@ -1,0 +1,23 @@
+package models;
+import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+
+
+public class Library extends ApplicationWindow{
+
+	public Library() {
+		super(null);
+		// TODO Auto-generated constructor stub
+	}
+	//Mediators will be created and destroyed as object are brought into and out of scope
+	protected Control createContents(Composite parent){
+		//subject tree, should allow a person to have more than one set of flash cards per class
+		//
+		return null;
+	}
+
+
+	
+
+}

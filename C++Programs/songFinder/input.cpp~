@@ -1,0 +1,8 @@
+#include <stdio>
+#include <iostream>
+#include "input.h"
+
+int main(int argc,char** argv)
+{
+  typed=getInput();  
+}

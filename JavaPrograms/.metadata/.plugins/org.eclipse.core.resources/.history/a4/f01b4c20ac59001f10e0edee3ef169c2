@@ -1,0 +1,44 @@
+import java.io.File;
+import java.util.ArrayList;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+
+public class ExcellRead {
+	Sheet sheet;
+	ArrayList<FaceCard> cards;
+
+	public ExcellRead() {
+
+		Shell ashell = new Shell();
+		String[] FILTER_NAMES = { "Excell Files" };
+		String[] FILTER_EXTS = { "*.xls", ".xl" };
+		FileDialog fd = new FileDialog(ashell);
+		fd.setFilterNames(FILTER_NAMES);
+		fd.setFilterExtensions(FILTER_EXTS);
+		fd.setFilterPath(System.getProperty("user.home"));
+		String path = fd.open();
+		Workbook wbook = null;
+		try {
+			wbook = Workbook.getWorkbook(new File(path));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sheet=wbook.getSheet(0);
+		
+		for(int i=0;i<200;i++){
+			Cell bcell=sheet.getCell(i, 1);
+			String bString=bcell.getContents();
+			if(bString.isEmpty()){
+				continue;
+			}
+			Cell fcell=sheet.getCell(i,0);
+			String fString=fcell.getContents();
+		}
+	}
+}

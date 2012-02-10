@@ -1,0 +1,6 @@
+import java.net.URL;
+
+
+public class VocabGetter {
+URL myurl=new URL("http://hello.com");
+}

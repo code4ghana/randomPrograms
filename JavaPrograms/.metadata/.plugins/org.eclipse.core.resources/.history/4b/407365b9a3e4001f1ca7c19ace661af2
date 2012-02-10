@@ -1,0 +1,97 @@
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+	public static int[] myArray;
+	public static String output = "";
+	public static int length;
+	public static int numOfSwaps = 0;
+
+	public static void main(String[] args) throws IOException {
+
+		Scanner in = new Scanner(System.in);
+		String inputNum = in.nextLine();
+		String testCase = "";
+
+		while (inputNum.equals("0") == false) {
+			inputNum.trim();
+			testCase = "";
+			int e = 0;
+			// System.out.println("i is " + e );
+			while (inputNum.charAt(e) != ' ') {
+				testCase = testCase + inputNum.charAt(e);
+				e++;
+				// System.out.println("i ins " +e );
+			}
+			testCase.trim();
+			String inputNumbers = "";
+
+			inputNumbers = inputNum.substring(e + 1);
+			int y = 0;
+			myArray = new int[Integer.parseInt(testCase)];
+			int l = 0;
+			String num;
+			while (y < inputNumbers.length()) {
+				num = "";
+				while (inputNumbers.charAt(y) != ' ') {
+					// System.out.println("chartAt(" + y +") is " +
+					// alien.charAt(y) );
+					num = num + inputNumbers.charAt(y);
+					y++;
+					if (y == inputNumbers.length())
+						break;
+				}
+				num.trim();
+				// System.out.println("num is " + num );
+				myArray[l] = Integer.parseInt(num);
+				l++;
+				y++;
+			}
+			numOfSwaps = 0;
+			int length = myArray.length - 1;
+			sortArray(myArray, 0, length);
+			// for (int x = 0; x< Integer.parseInt(testCase); x ++){
+			// System.out.print(myArray[x] + " ");
+			// }
+			String person = "";
+			if (numOfSwaps % 2 == 0) // if even
+			{
+				person = "Onlooker";
+			} else {
+				person = "Magician"; // if odd
+			}
+			System.out.println(person + " " + numOfSwaps);
+			inputNum = in.nextLine();
+
+		}
+	}
+
+	// function sortArray uses merge sort
+	public static void sortArray(int ArrayOfCards[], int lowValue, int length) {
+		int last = length;
+		int first = lowValue;
+		// if(first<last)
+		int[] result={length};
+		if (first >= last) {
+			return;
+		}
+		
+		int mid=length/2;
+		int[] left={mid};
+		int[] right={mid};
+		for (int i = 0; i < mid; i++) {
+			left[i]=ArrayOfCards[i];
+		}
+		for (int i = mid; i < length; i++) {
+			right[i]=ArrayOfCards[i];
+		}
+		
+		left=sortArray(left, 0, mid);
+		
+	}
+	static int[] result(int[]left,int[]right){
+		
+		return null;
+	}
+}

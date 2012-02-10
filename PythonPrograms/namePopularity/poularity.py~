@@ -1,0 +1,9 @@
+#Jeff Kusi
+#This program uses regular expressions to get baby names from a file and outputs them in tems of popularity
+
+import re
+
+def getNames(filename,output):
+    file=open(filename,"r")
+    match=re.mathall(r"<h2>Popularity in\s+<\h2>",file)
+    

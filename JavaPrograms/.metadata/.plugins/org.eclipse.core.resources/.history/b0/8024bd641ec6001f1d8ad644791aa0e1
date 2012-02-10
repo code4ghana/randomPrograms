@@ -1,0 +1,16 @@
+import org.eclipse.jface.window.ApplicationWindow;
+import org.eclipse.swt.widgets.Shell;
+
+
+public class Library extends ApplicationWindow{
+
+	public Library(null) {
+		super(parentShell);
+		// TODO Auto-generated constructor stub
+	}
+	
+
+
+	
+
+}

@@ -1,0 +1,23 @@
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.jsoup.nodes.Document;
+
+
+public class VocabGetter {
+	public VocabGetter(){
+		for(int i=1;i<27;i++){
+			URL myurl=null;
+			Document doc=null;
+		try {
+			myurl=new URL("http://www.soundkeepers.com/GRE/print.php?n="+i);
+			doc=new Document(myurl,3*1000);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+}
+}

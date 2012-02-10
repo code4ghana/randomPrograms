@@ -1,0 +1,10 @@
+/**
+@author Jeff Kusi
+ **/
+#ifndef INPUT_H
+#define INPUT_H
+
+char** completions(char* typed);
+
+
+#endif

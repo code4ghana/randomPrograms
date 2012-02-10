@@ -1,0 +1,52 @@
+package engine;
+
+import gui.FlashCardGui;
+
+import java.util.ArrayList;
+
+import models.FaceCard;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
+import util.CardManager;
+
+
+
+public class FlashCardEngine {
+
+	public static void main(String[] args) {
+		FlashCardGui flash = new FlashCardGui();
+
+		ArrayList<FaceCard> cardArr = new ArrayList<FaceCard>(flash.loadCards());
+		Shell myShell=new Shell();
+		flash.cardMan = new CardManager(cardArr);
+		MessageBox m = new MessageBox(myShell, SWT.YES | SWT.NO | SWT.CANCEL);
+		
+		m.setMessage("Do you want to run the passive Version?");
+		int resp = m.open();
+		if (resp == SWT.CANCEL) {
+			System.exit(0);
+		}
+		if (resp == SWT.YES) {
+			
+			return ExcellRead.ExcellRead();
+		}
+//		 System.out.println(cardMan.getrandCard().getWord());
+		flash.run();
+		
+		
+		
+		
+		flash.notification(myShell,new CardManager(cardArr));
+		
+		myShell.open();
+		myShell.setVisible(false);
+		while (!myShell.isDisposed()) {
+			if (!myShell.getDisplay().readAndDispatch()) {
+				myShell.getDisplay().sleep();
+			}
+		}
+	}
+}

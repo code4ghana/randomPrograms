@@ -1,0 +1,13 @@
+//Jeff Kusi
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc,char** argv)
+{
+  if(arc<2)
+    {
+      printf("Please supply the string to reverse\n");
+      exit(SUCCESS);
+    }
+  char* string=argv[1];
+}

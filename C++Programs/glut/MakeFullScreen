@@ -1,0 +1,17 @@
+all:clean\
+	fullScreen
+#compiler options
+CXX = g++
+CXXFLAGS = -Wall -g -o
+#FIle Dependencies
+SRC = fullScreen.cpp
+OBJ =  $(addsuffix .o, $(basename $(SRC)))
+
+#libraries
+LIBS =  -lGL -lGLU -lglut 
+
+fullScreen:
+	$(CXX) $(CXXFLAGS) fullScreen $(SRC) $(LIBS)
+
+clean:
+	rm -rf *~ $(OBJ)

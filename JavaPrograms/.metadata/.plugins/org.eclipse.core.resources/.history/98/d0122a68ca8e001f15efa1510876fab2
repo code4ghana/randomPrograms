@@ -1,0 +1,12 @@
+import java.util.ArrayList;
+
+public class Category {
+	String name;
+	ArrayList<Question> quesitons;
+
+	public Category(String name, ArrayList<Question> questions) {
+		this.name = name;
+		this.quesitons = questions;
+	}
+
+}

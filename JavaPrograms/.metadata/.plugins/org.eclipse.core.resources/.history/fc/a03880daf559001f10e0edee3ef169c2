@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.List;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+public class FlashCardIO {
+	public FlashCardIO() {
+
+	}
+
+	private XStream getXStream() {
+		XStream xstream = new XStream(new DomDriver());
+		xstream.alias("faceCard", FaceCard.class);
+		xstream.alias("backPart", BackPart.class);
+		xstream.alias("range", Range.class);
+		return xstream;
+	}
+
+	public boolean saveCards(List<FaceCard> cards, String fileName, String path)
+			throws Exception {
+		File cardsrepo = new File(path);
+		if (!cardsrepo.exists()) {
+			cardsrepo.mkdir();
+		}
+		String fs = System.getProperty("file.separator");
+		FileWriter fw = new FileWriter(String.format("%s%s%s",
+				cardsrepo.getAbsolutePath(), fs, fileName));
+		BufferedWriter bw = new BufferedWriter(fw);
+		getXStream().toXML(cards, bw);
+		fw.flush();
+		fw.close();
+
+		return true;
+	}
+
+	public List<FaceCard> loadFaceCards(String name, String path)
+			throws Exception {
+		File cardsRepo = new File(path);
+		if (!cardsRepo.exists()) {
+			throw new Exception("NoSuchCardsException");
+		}
+		String fs = System.getProperty("file.separator");
+		String s = String.format("%s%s%s", cardsRepo.getAbsolutePath(), fs,
+				name);
+		FileReader fr = new FileReader(s);
+		BufferedReader br = new BufferedReader(fr);
+
+		List<FaceCard> cards=(List<FaceCard>)getXStream().fromXML(br);
+		fr.close();
+
+		return cards;
+	}
+}

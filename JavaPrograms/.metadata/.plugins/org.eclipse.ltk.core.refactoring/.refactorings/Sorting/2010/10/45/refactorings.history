@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename method &apos;Main.result(...)&apos; to &apos;merge&apos;&#x0A;- Original project: &apos;MergeSort&apos;&#x0A;- Original element: &apos;Main.result(...)&apos;&#x0A;- Renamed element: &apos;Main.merge(...)&apos;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;result&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;{Main.java[Main~result~\[I~\[I" name="merge" references="true" stamp="1288497826473" version="1.0"/>
+</session>

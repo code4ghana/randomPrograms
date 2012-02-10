@@ -1,0 +1,10 @@
+import jxl.Workbook;
+import jxl.read.biff.WorkbookParser;
+
+
+public class ExcellRead {
+	Workbook wbook;
+public ExcellRead(){
+	wbook=new WorkbookParser(f, s)
+}
+}

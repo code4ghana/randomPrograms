@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="ChooseWorkspaceDialogSettings">
+		<item value="170" key="DIALOG_Y_ORIGIN"/>
+		<item value="200" key="DIALOG_X_ORIGIN"/>
+	</section>
+	<section name="WORKBENCH_SETTINGS">
+		<list key="ENABLED_TRANSFERS">
+		</list>
+	</section>
+	<section name="ExternalProjectImportWizard">
+		<item value="true" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
+	</section>
+	<section name="TaskPropertiesDialogSettings">
+		<item value="828" key="DIALOG_WIDTH"/>
+		<item value="222" key="DIALOG_Y_ORIGIN"/>
+		<item value="307" key="DIALOG_X_ORIGIN"/>
+		<item value="326" key="DIALOG_HEIGHT"/>
+		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="SaveAsDialogSettings">
+		<item value="613" key="DIALOG_WIDTH"/>
+		<item value="23" key="DIALOG_Y_ORIGIN"/>
+		<item value="415" key="DIALOG_X_ORIGIN"/>
+		<item value="606" key="DIALOG_HEIGHT"/>
+		<item value="1|Sans|10.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
+	</section>
+	<section name="CleanDialogSettings">
+		<item value="565" key="DIALOG_WIDTH"/>
+		<item value="188" key="DIALOG_Y_ORIGIN"/>
+		<item value="397" key="DIALOG_HEIGHT"/>
+		<item value="439" key="DIALOG_X_ORIGIN"/>
+		<item value="false" key="TOGGLE_SELECTED"/>
+	</section>
+</section>

@@ -1,0 +1,16 @@
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+
+public class VocabGetter {
+	public static void getSome(){
+	}
+	public static void main(String args[]){
+		getSome();
+	}
+
+}

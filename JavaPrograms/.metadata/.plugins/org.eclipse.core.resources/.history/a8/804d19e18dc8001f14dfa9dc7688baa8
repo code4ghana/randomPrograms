@@ -1,0 +1,29 @@
+package gui;
+
+import org.eclipse.jface.window.ToolTip;
+import org.eclipse.swt.widgets.Control;
+
+public class MyToolTip extends  ToolTip{
+
+	public MyToolTip(Control control) {
+		super(control);
+		// TODO Auto-generated constructor stub
+	}
+	protected Composite createToolTipContentArea(Event event, Composite parent) {
+        Composite comp = new Composite(parent,SWT.NONE);
+        comp.setLayout(new FillLayout());
+
+        Button b = new Button(comp,SWT.PUSH);
+        b.setText("Say Hello");
+        b.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                hide();
+                MessageBox box = new MessageBox(parentShell,SWT.ICON_INFORMATION);
+                box.setMessage("Hello World!");
+                box.setText("Hello World");
+                box.open();
+            }
+        });
+    }
+
+}

@@ -1,0 +1,8 @@
+
+public class Category {
+
+	public Category(String name,ArrayList<Question> questions) {
+		// TODO Auto-generated constructor stub
+	}
+
+}

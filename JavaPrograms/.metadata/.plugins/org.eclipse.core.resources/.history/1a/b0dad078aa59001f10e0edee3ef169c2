@@ -1,0 +1,24 @@
+import java.io.File;
+
+import jxl.Workbook;
+import jxl.read.biff.WorkbookParser;
+
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+
+
+public class ExcellRead {
+	Workbook wbook;
+public ExcellRead(){
+	
+	Shell ashell = new Shell();
+	String[] FILTER_NAMES = { "Excell Files" };
+	String[] FILTER_EXTS = { "*.xls",".xl" };
+	FileDialog fd = new FileDialog(ashell);
+	fd.setFilterNames(FILTER_NAMES);
+	fd.setFilterExtensions(FILTER_EXTS);
+	fd.setFilterPath(System.getProperty("user.home"));
+	String path=fd.open();
+	wbook=new WorkbookParser(new File(path));
+}
+}

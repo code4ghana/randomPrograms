@@ -1,0 +1,13 @@
+import org.eclipse.swt.widgets.FileDialog;
+
+import jxl.Workbook;
+import jxl.read.biff.WorkbookParser;
+
+
+public class ExcellRead {
+	Workbook wbook;
+public ExcellRead(){
+	
+	wbook=new WorkbookParser(new FileDialog(new Shell()).open());
+}
+}

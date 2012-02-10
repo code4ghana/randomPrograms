@@ -1,0 +1,17 @@
+import java.net.MalformedURLException;
+import java.net.URL;
+
+
+public class VocabGetter {
+	public VocabGetter(){
+		for(int i=1;i<27;i++)
+			URL myurl=null;
+		try {
+			myurl=new URL("http://www.soundkeepers.com/GRE/print.php?n="+i);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+}

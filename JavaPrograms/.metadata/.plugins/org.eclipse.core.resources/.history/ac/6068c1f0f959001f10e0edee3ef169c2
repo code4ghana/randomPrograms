@@ -1,0 +1,33 @@
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+
+public class VocabGetter {
+	public static void getSome(){
+		for(int i=1;i<27;i++){
+			URL myurl=null;
+			Document doc=null;
+		try {
+			myurl=new URL("http://www.soundkeepers.com/GRE/print.php?n="+i);
+			doc=Jsoup.parse(myurl, 3*1000);
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String title=doc.title();
+		System.out.println(title);
+		
+		
+	}}
+	public static void main(String args[]){
+		
+	}
+
+}

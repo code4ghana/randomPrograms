@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;PullTable/src/CourseLib/Runner.py&apos; to &apos;PullTable&apos;" description="Rename resource &apos;Runner.py&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/CourseLib/Runner.py" name="PullTable" stamp="1273316890302" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;PullTable/src/CourseLib/PullTable&apos; to &apos;PullTable.py&apos;" description="Rename resource &apos;PullTable&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/CourseLib/PullTable" name="PullTable.py" stamp="1273316933310" updateReferences="true"/>
+</session>

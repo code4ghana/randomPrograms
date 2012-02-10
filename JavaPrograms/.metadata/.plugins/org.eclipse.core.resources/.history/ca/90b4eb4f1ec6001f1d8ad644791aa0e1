@@ -1,0 +1,11 @@
+import org.eclipse.swt.widgets.Composite;
+
+
+public class Library extends Composite{
+
+	public Library(Composite parent, int style) {
+		super(parent, style);
+		// TODO Auto-generated constructor stub
+	}
+
+}

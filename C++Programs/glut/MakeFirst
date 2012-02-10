@@ -1,0 +1,17 @@
+all:clean\
+	first
+#compiler options
+CXX = g++
+CXXFLAGS = -Wall -g -o
+#FIle Dependencies
+SRC = first.cpp
+#OBJ =  $(addsuffix .o, $(basename $(SRC)))
+
+#libraries
+LIBS =  -lGL -lGLU -lglut 
+
+first:
+	$(CXX) $(CXXFLAGS) first $(SRC) $(LIBS)
+
+clean:
+	rm -rf *~ first

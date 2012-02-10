@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Encapsulate field &apos;models.Schedule.sections&apos; in &apos;models.Schedule&apos;&#x0A;- Original project: &apos;AutomaticScheduler&apos;&#x0A;- Original element: &apos;models.Schedule.sections&apos;&#x0A;- Getter method name: &apos;getSections&apos;&#x0A;- Setter method name: &apos;setSections&apos;&#x0A;- Field visibility: &apos;public&apos;&#x0A;- Use getter and setter methods in declaring type" comments="false" declaring="true" description="Encapsulate field &apos;sections&apos;" flags="589830" getter="getSections" id="org.eclipse.jdt.ui.self.encapsulate" input="/src&lt;models{Schedule.java[Schedule^sections" insertion="0" setter="setSections" stamp="1288081941859" version="1.0" visibility="1"/>
+</session>

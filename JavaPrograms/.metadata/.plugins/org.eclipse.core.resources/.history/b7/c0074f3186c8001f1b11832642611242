@@ -1,0 +1,186 @@
+package io;
+
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.eclipse.swt.widgets.DirectoryDialog;
+import org.eclipse.swt.widgets.Shell;
+
+import Model.FaceCard;
+
+public class VocabGetter implements Runnable {
+	int index = 0;
+	public static List<List<FaceCard>> wordsList;
+
+	public VocabGetter(int i, List<List<FaceCard>> words) {
+		index = i;
+		// for tracking what is done and keeping retrieved words bank
+		wordsList = words;
+	}
+
+	public List<FaceCard> makeCards(String words) {
+		List<FaceCard> cards = new ArrayList<FaceCard>();
+		BufferedReader wordsBuffer = new BufferedReader(new StringReader(words));
+		String line = "";
+		try {
+			while ((line = wordsBuffer.readLine()) != null) {
+				line.trim();
+				if (line.isEmpty())
+					continue;
+				String[] separated = line.split("\\s+", 2);
+
+				FaceCard face = new FaceCard(separated[0].trim(), " "
+						+ separated[1]);
+
+				cards.add(face);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("could not read line");
+			e.printStackTrace();
+		}
+
+		return cards;
+	}
+
+	public String getTable(int i) {
+		String parsed = "";
+		Pattern tags = Pattern.compile("<.+?>");
+		String rawTable = "";
+
+		String url = "http://www.soundkeepers.com/GRE/print.php?n=" + i;
+
+		URL vocabPage;
+		try {
+			vocabPage = new URL(url);
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					vocabPage.openStream()));
+			String nextline = System.getProperty("line.separator");
+			String inputLine = "";
+			// this boolean tells if the reader has reached the table
+			boolean tablepart = false;
+			while ((inputLine = in.readLine()) != null) {
+				// if you havn't reached the table yet try and see if u are
+				// there now
+				if (tablepart == false
+						&& inputLine.contains("<table class=wordlist>")) {
+					tablepart = true;
+					continue;
+				}
+				// if you havn't reached the table, there nothing to do
+				if (tablepart == false) {
+					continue;
+				}
+				// if you see the end of the table then just stop reading
+				if (inputLine.contains("</table>")) {
+					break;
+				}
+
+				rawTable += nextline + inputLine;
+
+			}
+
+			in.close();
+			vocabPage = null;
+			// remove all the tags from the TableString
+			Matcher finder = tags.matcher(rawTable);
+			rawTable = finder.replaceAll("");
+			// wrap string to make it easier to read and work with
+			BufferedReader rawReader = new BufferedReader(new StringReader(
+					rawTable));
+			String line = "";
+			// check that there is still more to read and the line is not
+			// empty
+			while ((line = rawReader.readLine()) != null) {
+				// we don't care aout blanks
+				line = line.trim();
+				if (line.isEmpty())
+					continue;
+				// we don't care about useless Dictionary.com stuff or word
+				// number
+				if (line.startsWith("Look up this word at:")
+						|| Character.isDigit(line.charAt(0)))
+					continue;
+				parsed += (nextline + line);
+			}
+
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return parsed;
+
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+		List<FaceCard> cards = makeCards(getTable(index));
+		synchronized (this) {
+			wordsList.add(cards);
+			// System.out.println("Got the "+index+"th list");
+		}
+
+		return;
+
+	}
+
+	public static void main(String args[]) {
+
+		List<List<FaceCard>> words = new ArrayList<List<FaceCard>>();
+		for (int i = 1; i < 27; i++) {
+			Thread t = new Thread(new VocabGetter(i, words));
+			t.start();
+		}
+		System.gc();
+		while (words.size() < 25) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				System.out.println("don't feel like sleeping");
+				// e.printStackTrace();
+			}
+
+		}
+		DirectoryDialog savedir=new DirectoryDialog(new Shell());
+		String path=savedir.open();
+		
+		try {
+			new FlashCardIO().saveCards(combineWords(words,0,words.size()-1), "GREVocab", path);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private static List<FaceCard> combineWords(List<List<FaceCard>> words,int start, int end) {
+		// TODO Auto-generated method stub
+		//base case
+		List<FaceCard> cards=new ArrayList<FaceCard>();
+		if(start-end<=1){cards.addAll(words.get(start));
+		cards.addAll(words.get(end));
+		return cards;}
+		
+		//add left subtree
+		cards.addAll(combineWords(words, start, (start+end)/2));
+		//add right subtree
+		cards.addAll(combineWords(words,(start+end)/2+1,end));
+		return cards;
+	}
+}

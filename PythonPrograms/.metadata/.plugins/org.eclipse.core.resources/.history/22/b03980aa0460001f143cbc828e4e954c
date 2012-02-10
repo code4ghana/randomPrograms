@@ -1,0 +1,17 @@
+import urllib2
+from OutsideLibrary.table_parser import TableParser
+def getTable():
+    for i in range(1,1):
+        response=urllib2.urlopen("http://www.soundkeepers.com/GRE/print.php?n="+str(i)).read()
+        p=TableParser()
+        p.feed(response)
+#       create a file that will hold the content 
+        file=open("file"+str(i)+".txt","w")
+        file.write(p.doc)
+        print file.read()
+        
+            
+    
+    
+
+getTable()

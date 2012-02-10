@@ -1,0 +1,52 @@
+package io;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import models.FaceCard;
+
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+
+public class parsePerLine {
+	public static void main(String[] args) {
+		String cardspath, cardsname;
+		Shell ashell = new Shell();
+		String[] FILTER_NAMES = { "GRE" };
+		String[] FILTER_EXTS = { "*.txt" };
+		FileDialog fd = new FileDialog(ashell);
+		fd.setFilterNames(FILTER_NAMES);
+		fd.setFilterExtensions(FILTER_EXTS);
+		fd.setFilterPath(System.getProperty("user.home"));
+		cardspath = fd.open();
+		File cardsFile = new File(cardspath);
+		cardspath = cardsFile.getParent();
+		cardsname = cardsFile.getName();
+		ArrayList<FaceCard> cards=new ArrayList<FaceCard>();
+		try {
+			Scanner scan = new Scanner(cardsFile);
+			String line = scan.nextLine();
+		
+			while (line != null) {
+								
+				FaceCard face= new FaceCard(line.substring(0, line.indexOf(" ")),line.substring(line.indexOf(" ")+1));
+				cards.add(face);
+				
+						
+			}
+			scan.close();
+			new FlashCardIO().saveCards(cards, "newGREVocab", cardspath);
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+	}
+}

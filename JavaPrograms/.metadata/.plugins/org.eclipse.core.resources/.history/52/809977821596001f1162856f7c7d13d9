@@ -1,0 +1,189 @@
+package gui;
+
+import io.GoGetter;
+
+import java.util.ArrayList;
+
+import mediators.ButtonBoardMediator;
+import mediators.QuestionButtonMediator;
+import model.Category;
+import model.Player;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+
+public class JeopardyBoard {
+	public Shell shell;
+	public ArrayList<Player> players;
+	public ArrayList<Category> categories;
+	public ArrayList<QuestionButtonMediator> questMeds;
+	public ArrayList<ButtonBoardMediator> buttonMeds;
+	public ArrayList<Button> questButtons;
+	public ArrayList<Text> scoresTexts;
+	public ExpandBar mainBar;
+	public Composite gameBoardComp;
+	public Composite scoreBoardComp;
+	public ExpandItem gameBoardItem;
+	public ExpandItem scoreBoardItem;
+	public Player currentPlayer;
+
+	public JeopardyBoard(ArrayList<Category> cats, ArrayList<Player> players) {
+		Display disp = new Display();
+		shell = new Shell(disp);
+		this.categories = cats;
+		this.players = players;
+		shell.setLayout(new FillLayout());
+		shell.setText("Bible Jeopardy");
+		mainBar = new ExpandBar(shell, SWT.V_SCROLL);
+		questMeds = new ArrayList<QuestionButtonMediator>();
+		buttonMeds = new ArrayList<ButtonBoardMediator>();
+		questButtons = new ArrayList<Button>();
+		scoresTexts = new ArrayList<Text>();
+		currentPlayer=players.get(0);
+		setUpGameBoard();
+		setUpScoreBoard();
+
+	}
+	
+	public void setNextPlayer(){
+		int position=players.indexOf(currentPlayer);
+		if(position==(players.size()-1)){
+			currentPlayer=players.get(0);
+			return;
+		}
+		currentPlayer=players.get(++position);
+		
+	}
+	public void updateScore(){
+		int position=players.indexOf(currentPlayer);
+		scoresTexts.get(position).setText(String.valueOf(currentPlayer.getPoints()));
+	}
+
+	public void run() {
+		shell.open();
+		shell.setMaximized(true);
+		while (!shell.isDisposed()) {
+			if (!shell.getDisplay().readAndDispatch()) {
+				shell.getDisplay().sleep();
+			}
+		}
+	}
+
+	public void setUpGameBoard() {
+		// composite setup
+		gameBoardComp = new Composite(mainBar, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout = new GridLayout(categories.size(), true);
+		layout.marginLeft = layout.marginTop = layout.marginBottom = 10;
+		layout.marginRight = 10;
+		layout.verticalSpacing = 10;
+
+		gameBoardComp.setLayout(layout);
+		// set up buttons
+		for (Category cat : categories) {
+			Label catLabel = new Label(gameBoardComp, SWT.BORDER_DOT);
+			catLabel.setText(cat.getName());
+			GridData gData = new GridData();
+			gData.horizontalAlignment = GridData.CENTER;
+			gData.grabExcessHorizontalSpace = true;
+			gData.grabExcessVerticalSpace=true;
+			catLabel.setLayoutData(gData);
+		}
+		for (int i = 0; i < categories.get(0).getQuesitons().size(); i++) {
+			for (int j = 0; j < categories.size(); j++) {
+				Button button = new Button(gameBoardComp, SWT.PUSH);
+				GridData gData = new GridData(SWT.FILL, SWT.FILL, true, true);
+				gData.grabExcessHorizontalSpace = true;
+				button.setLayoutData(gData);
+				int points = categories.get(j).getQuesitons().get(i)
+						.getPoints();
+				button.setText(String.valueOf(points));
+				questButtons.add(button);
+				questMeds.add(new QuestionButtonMediator(categories.get(j)
+						.getQuesitons().get(i), button,this));
+				buttonMeds.add(new ButtonBoardMediator(button, gameBoardComp));
+			}
+
+		}
+
+		gameBoardItem = new ExpandItem(mainBar, SWT.NONE, 0);
+		gameBoardItem.setText("Questions Board");
+		gameBoardItem.setHeight(gameBoardComp.computeSize(SWT.DEFAULT,
+				SWT.DEFAULT).y);
+		gameBoardItem.setControl(gameBoardComp);
+		gameBoardItem.setImage(shell.getDisplay().getSystemImage(
+				SWT.ICON_QUESTION));
+	}
+
+	public void setUpScoreBoard() {
+		scoreBoardComp = new Composite(mainBar, SWT.NONE);
+		GridLayout layout = new GridLayout();
+		layout.numColumns=5;
+		scoreBoardComp.setLayout(layout);
+
+		for (Player player : players) {
+			Label playName = new Label(scoreBoardComp, SWT.BORDER_DOT);
+			playName.setText(player.getName());
+			GridData gData = new GridData();
+			gData.horizontalSpan=1;
+			gData.horizontalAlignment=SWT.FILL;
+	
+			playName.setLayoutData(gData);
+
+			Text scoreText = new Text(scoreBoardComp, SWT.BORDER | SWT.MULTI
+					| SWT.READ_ONLY|SWT.CENTER);
+			scoreText.setText(String.valueOf(player.getPoints()));
+			gData = new GridData();
+			gData.horizontalAlignment=SWT.FILL;
+			
+			gData.grabExcessHorizontalSpace=true;
+			gData.horizontalSpan = 2;
+			
+			scoreText.setLayoutData(gData);
+			Label eatSpace= new Label(scoreBoardComp,SWT.NONE);
+			gData=new GridData();
+			gData.horizontalAlignment=SWT.BEGINNING;
+			gData.horizontalSpan=2;
+			gData.grabExcessHorizontalSpace=true;
+			eatSpace.setLayoutData(gData);
+			// scoreText.setLayoutData(new
+			// GridData(GridData.HORIZONTAL_ALIGN_FILL));
+			scoresTexts.add(scoreText);
+
+		}
+		
+
+		scoreBoardItem = new ExpandItem(mainBar, SWT.NONE, 1);
+		scoreBoardItem.setText("Scores");
+		scoreBoardItem.setHeight(scoreBoardComp.computeSize(SWT.DEFAULT,
+				SWT.DEFAULT).y);
+		scoreBoardItem.setControl(scoreBoardComp);
+		scoreBoardItem.setImage(shell.getDisplay().getSystemImage(
+				SWT.ICON_INFORMATION));
+		scoreBoardItem.setExpanded(true);
+
+	}
+
+	public static void main(String args[]) {
+		ArrayList<Category> categories = GoGetter.getQuestions();
+		ArrayList<Player> players = new ArrayList<Player>();
+		players.add(new Player("Grace"));
+		players.add(new Player("Linda"));
+
+
+		new JeopardyBoard(categories, players).run();
+	}
+
+	
+
+}

@@ -1,0 +1,10 @@
+import urllib2
+
+def getTable():
+    response=urllib2.urlopen("http://www.soundkeepers.com/GRE/print.php?n=1")
+    return response;
+    
+def main():
+    print getTable();
+    
+if 

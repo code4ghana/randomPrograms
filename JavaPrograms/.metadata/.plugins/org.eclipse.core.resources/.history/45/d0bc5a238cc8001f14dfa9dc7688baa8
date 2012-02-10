@@ -1,0 +1,662 @@
+package gui;
+
+import io.FlashCardIO;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import models.FaceCard;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolTip;
+import org.eclipse.swt.widgets.Tray;
+import org.eclipse.swt.widgets.TrayItem;
+
+import util.CardManager;
+import util.ExcellRead;
+
+public class FlashCardGui {
+
+	private static String cardspath = "";
+	private static String cardsname = "";
+	public CardManager cardMan;
+	public Shell menuShell;
+
+	List cardList;
+	Rectangle rect;
+
+	boolean keepgoing = true;
+	Shell createShell;
+	Shell removeShell;
+	Shell faceShell;
+	Shell backShell;
+
+	public void run() {
+
+		menuShell = new Shell();
+		menuShell.setText("Menu");
+
+		rect = menuShell.getDisplay().getBounds();
+		Point shellSize = menuShell.getSize();
+		menuShell.setLocation((rect.width - shellSize.x) / 2,
+				(rect.height - shellSize.y) / 2);
+		FillLayout fillLayout = new FillLayout(SWT.VERTICAL);
+
+		menuShell.setLayout(fillLayout);
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.verticalSpan = 1;
+		gridData.grabExcessVerticalSpace = false;
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+
+		final Button addCardButton = new Button(menuShell, SWT.PUSH);
+		addCardButton.setData(gridData);
+		addCardButton.setText("   &Add Card  ");
+		addCardButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				menuShell.setVisible(false);
+				createShell = new Shell(menuShell.getDisplay());
+				createShell.setLocation(
+						(rect.width - createShell.getSize().x) / 2,
+						(rect.height - createShell.getSize().y) / 2);
+				FillLayout createFill = new FillLayout(SWT.VERTICAL);
+				createShell.setLayout(createFill);
+				new Label(createShell, SWT.BOLD).setText("Question");
+				final Text face = new Text(createShell, SWT.BORDER
+						| SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.WRAP);
+				new Label(createShell, SWT.BOLD).setText("Answer");
+				final Text back = new Text(createShell, SWT.BORDER
+						| SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI | SWT.WRAP);
+				createShell.addListener(SWT.Close, new Listener() {
+
+					@Override
+					public void handleEvent(Event arg0) {
+						// TODO Auto-generated method stub
+						// arg0.doit=true;
+						menuShell.setVisible(true);
+					}
+				});
+
+				final Button addButton = new Button(createShell, SWT.PUSH);
+				addButton.setText(" &ADD IT");
+				addButton.addSelectionListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+
+						cardMan.addCard(new FaceCard(face.getText(), back
+								.getText()));
+						createShell.dispose();
+						menuShell.setVisible(true);
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
+				createShell.open();
+
+				while (!createShell.isDisposed()) {
+					if (!createShell.getDisplay().readAndDispatch()) {
+						createShell.getDisplay().sleep();
+					}
+				}
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		final Button viewCardsButton = new Button(menuShell, SWT.PUSH);
+		viewCardsButton.setData(gridData);
+		viewCardsButton.setText("  &view Cards  ");
+		viewCardsButton.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				if (cardMan.getAllCards() == null) {
+					return;
+				}
+				menuShell.setVisible(false);
+				removeShell = new Shell(menuShell.getDisplay());
+				removeShell.setLocation(
+						(rect.width - removeShell.getSize().x) / 2,
+						(rect.height - removeShell.getSize().y) / 2);
+				FillLayout createFill = new FillLayout(SWT.VERTICAL);
+
+				removeShell.setLayout(createFill);
+
+				String[] cardStrings = new String[cardMan.getAllCards().size()];
+
+				int i = 0;
+				for (Iterator<FaceCard> cardItr = cardMan.getAllCards()
+						.iterator(); cardItr.hasNext();) {
+					FaceCard theCard = cardItr.next();
+					String cText = "";
+					if (theCard.getWord().length() <= 40)
+						cText = theCard.getWord();
+					else if (theCard.getWord().length() > 40)
+						cText = theCard.getWord().substring(0, 39);
+					cardStrings[i] = cText;
+					i++;
+				}
+				cardList = new List(removeShell, SWT.MULTI | SWT.BORDER
+						| SWT.V_SCROLL);
+				cardList.setItems(cardStrings);
+				final Button removeIt = new Button(removeShell, SWT.PUSH);
+				removeIt.setText("&Remove selected");
+				removeIt.addSelectionListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+						if (cardList.getSelectionCount() == 0)
+							return;
+						int selInd = cardList.getSelectionIndex();
+						cardMan.removeCard(cardMan.getAllCards().get(selInd));
+						cardList.remove(selInd);
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+
+				removeShell.open();
+				while (!removeShell.isDisposed()) {
+					if (!removeShell.getDisplay().readAndDispatch()) {
+						removeShell.getDisplay().sleep();
+					}
+				}
+				menuShell.setVisible(true);
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		final Button startButton = new Button(menuShell, SWT.PUSH);
+		startButton.setData(gridData);
+		startButton.setText("   &Start   ");
+		startButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				menuShell.setVisible(false);
+				keepgoing = true;
+				final Color red = menuShell.getDisplay().getSystemColor(
+						SWT.COLOR_RED);
+				final Color green = menuShell.getDisplay().getSystemColor(
+						SWT.COLOR_GREEN);
+
+				while (keepgoing) {
+					final FaceCard currentCard = cardMan.getrandCard();
+					if (!keepgoing)
+						break;
+					// front shell creation
+					faceShell = new Shell(menuShell.getDisplay(), SWT.NO_TRIM);
+					faceShell.addListener(SWT.Close, new Listener() {
+
+						@Override
+						public void handleEvent(Event arg0) {
+							// TODO Auto-generated method stub
+							arg0.doit = false;
+						}
+					});
+
+					faceShell.setLocation(
+							(rect.width - faceShell.getSize().x) / 2,
+							(rect.height - faceShell.getSize().y) / 2);
+					faceShell.setLayout(new FormLayout());
+
+					// creating the face text area
+					StyledText faceArea = new StyledText(faceShell, SWT.TOP
+							| SWT.MULTI | SWT.READ_ONLY | SWT.WRAP);
+					Font faceFont = new Font(faceShell.getDisplay(), "Arial",
+							16, SWT.BOLD | SWT.ITALIC);
+					faceArea.setFont(faceFont);
+					faceArea.setForeground(faceShell.getDisplay()
+							.getSystemColor(SWT.COLOR_DARK_GREEN));
+
+					faceArea.setText(currentCard.getWord());
+					// creating the data for the face Text
+					FormData fData = new FormData();
+					fData.top = new FormAttachment(0, 2);
+					fData.bottom = new FormAttachment(100, -200 / 3);
+					fData.right = new FormAttachment(100, -5);
+					fData.left = new FormAttachment(0, 5);
+					faceArea.setLayoutData(fData);
+
+					// creating the flip button
+					final Button flipButton = new Button(faceShell, SWT.PUSH);
+					flipButton.setText("   &Flip   ");
+					Font flipFont = new Font(faceShell.getDisplay(), "courier",
+							18, SWT.BOLD);
+					flipButton.setForeground(faceShell.getDisplay()
+							.getSystemColor(SWT.COLOR_DARK_GREEN));
+
+					flipButton.setFont(flipFont);
+					// create the data for flip button
+					FormData flipData = new FormData();
+					flipData.top = new FormAttachment(faceArea, 5);
+					flipData.bottom = new FormAttachment(100, -5);
+					flipData.right = new FormAttachment(100, -5);
+					flipData.left = new FormAttachment(0, 5);
+					flipButton.setLayoutData(flipData);
+					flipButton.addSelectionListener(new SelectionListener() {
+
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+							faceShell.setVisible(false);
+
+							if (!backShell.isDisposed()) {
+								backShell.open();
+								while (!backShell.isDisposed()) {
+									if (!backShell.getDisplay()
+											.readAndDispatch())
+										backShell.getDisplay().sleep();
+								}
+								faceShell.dispose();
+
+							}
+						}
+
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+
+						}
+
+					});
+
+					// backshell creation
+					backShell = new Shell(menuShell.getDisplay(), SWT.NO_TRIM);
+					backShell.setLocation(
+							(rect.width - backShell.getSize().x) / 2,
+							(rect.height - backShell.getSize().y) / 2);
+					backShell.setLayout(new FormLayout());
+					// question button
+					final Button backToQuestButton = new Button(backShell,
+							SWT.PUSH);
+					backToQuestButton.setText("&Question");
+					Color backcolor = backShell.getDisplay().getSystemColor(
+							SWT.COLOR_BLUE);
+
+					Font backFont = new Font(faceShell.getDisplay(), "Arial",
+							16, SWT.BOLD | SWT.ITALIC);
+					// question data creation
+					FormData rightWrongData = new FormData();
+					rightWrongData.top = new FormAttachment(0, 5);
+					rightWrongData.bottom = new FormAttachment(20, -5);
+					rightWrongData.right = new FormAttachment(49, 0);
+					rightWrongData.left = new FormAttachment(0, 5);
+					backToQuestButton.setLayoutData(rightWrongData);
+					backToQuestButton.setFont(flipFont);
+					backToQuestButton.setForeground(backcolor);
+					backToQuestButton
+							.addSelectionListener(new SelectionListener() {
+
+								@Override
+								public void widgetSelected(SelectionEvent arg0) {
+									// TODO Auto-generated method stub
+
+									if (!faceShell.isVisible()) {
+										faceShell.setVisible(true);
+									}
+									faceShell.setFocus();
+
+								}
+
+								@Override
+								public void widgetDefaultSelected(
+										SelectionEvent arg0) {
+									// TODO Auto-generated method stub
+
+								}
+							});
+					final Button endButton = new Button(backShell, SWT.PUSH);
+					endButton.setText("Menu");
+					endButton.setFont(backFont);
+					endButton.setForeground(backcolor);
+
+					// reuse the previous formdata
+					rightWrongData = new FormData();
+					rightWrongData.top = new FormAttachment(0, 5);
+					rightWrongData.bottom = new FormAttachment(20, -5);
+					rightWrongData.right = new FormAttachment(100, 0);
+					rightWrongData.left = new FormAttachment(50, 0);
+					endButton.setLayoutData(rightWrongData);
+					endButton.addSelectionListener(new SelectionListener() {
+
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+							keepgoing = false;
+							faceShell.dispose();
+							if (!backShell.isDisposed())
+								backShell.dispose();
+						}
+
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+
+						}
+					});
+
+					// backShell textarea creation
+					StyledText backTextArea = new StyledText(backShell,
+							SWT.READ_ONLY | SWT.MULTI | SWT.WRAP);
+					backTextArea.setText(currentCard.getAnswer());
+
+					backTextArea.setFont(backFont);
+					backTextArea.setForeground(backcolor);
+
+					// backshell text data
+					FormData backTextData = new FormData();
+					backTextData.top = new FormAttachment(backToQuestButton, 10);
+					backTextData.bottom = new FormAttachment(100, -200 / 3);
+					backTextData.right = new FormAttachment(100, -5);
+					backTextData.left = new FormAttachment(0, 5);
+					backTextArea.setLayoutData(backTextData);
+
+					// Correct button
+					final Button correctbutton = new Button(backShell, SWT.PUSH);
+					correctbutton.setText("&Correct");
+					correctbutton.setBackground(green);
+					correctbutton.setFont(backFont);
+					rightWrongData = new FormData();
+					rightWrongData.top = new FormAttachment(backTextArea, 5);
+					rightWrongData.bottom = new FormAttachment(100, -5);
+					rightWrongData.right = new FormAttachment(49, 1);
+					rightWrongData.left = new FormAttachment(0, 1);
+
+					correctbutton.setLayoutData(rightWrongData);
+					correctbutton.addSelectionListener(new SelectionListener() {
+
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+							currentCard.mark(true);
+							faceShell.dispose();
+							if (!backShell.isDisposed())
+								backShell.dispose();
+						}
+
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+
+						}
+					});
+					// Wrong button
+					final Button wrongButton = new Button(backShell, SWT.PUSH);
+					wrongButton.setText("&Incorrect");
+					wrongButton.setBackground(red);
+					wrongButton.setFont(backFont);
+					// reuse the previous data
+					rightWrongData = new FormData();
+					rightWrongData.top = new FormAttachment(backTextArea, 5);
+					rightWrongData.bottom = new FormAttachment(100, -5);
+					rightWrongData.right = new FormAttachment(100, -1);
+					rightWrongData.left = new FormAttachment(correctbutton, 1);
+					wrongButton.setLayoutData(rightWrongData);
+					wrongButton.addSelectionListener(new SelectionListener() {
+
+						@Override
+						public void widgetSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+							currentCard.mark(false);
+							faceShell.dispose();
+							if (!backShell.isDisposed())
+								backShell.dispose();
+							cardMan.update();
+
+						}
+
+						@Override
+						public void widgetDefaultSelected(SelectionEvent arg0) {
+							// TODO Auto-generated method stub
+
+						}
+					});
+
+					faceShell.open();
+					while (!faceShell.isDisposed()) {
+						if (!faceShell.getDisplay().readAndDispatch()) {
+							faceShell.getDisplay().sleep();
+						}
+					}
+
+				}
+				red.dispose();
+				green.dispose();
+
+				// TODO Auto-generated method stub
+				menuShell.setVisible(true);
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+
+		final Button saveButton = new Button(menuShell, SWT.PUSH);
+		saveButton.setText("save Cards");
+		saveButton.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				MessageBox m = new MessageBox(menuShell, SWT.ICON_INFORMATION);
+
+				try {
+					new FlashCardIO().saveCards(cardMan.getAllCards(),
+							cardsname, cardspath);
+					m.setMessage("The current state saved");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					m.setMessage("Was unable to save");
+					m.open();
+					return;
+				}
+				m.open();
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		menuShell.open();
+		while (!menuShell.isDisposed()) {
+			if (!menuShell.getDisplay().readAndDispatch()) {
+				menuShell.getDisplay().sleep();
+			}
+		}
+
+	}
+
+	public java.util.List<FaceCard> loadCards() {
+
+		java.util.List<FaceCard> theCards = new ArrayList<FaceCard>();
+		Shell ashell = new Shell();
+		MessageBox m = new MessageBox(ashell, SWT.YES | SWT.NO | SWT.CANCEL);
+		m.setMessage("Do you want the files to be read from an excell file?");
+		int resp = m.open();
+		if (resp == SWT.CANCEL) {
+			return new ArrayList<FaceCard>();
+		}
+		if (resp == SWT.YES) {
+			return ExcellRead.ExcellRead();
+		}
+
+		String[] FILTER_NAMES = { "FlashCards(*FlashCards.xml)" };
+		String[] FILTER_EXTS = { "*.xml" };
+		FileDialog fd = new FileDialog(ashell);
+		fd.setFilterNames(FILTER_NAMES);
+		fd.setFilterExtensions(FILTER_EXTS);
+		fd.setFilterPath(System.getProperty("user.home"));
+		cardspath = fd.open();
+		File cardsFile = new File(cardspath);
+		cardspath = cardsFile.getParent();
+		cardsname = cardsFile.getName();
+
+		/**
+		 * String path = new DirectoryDialog(ashell).open(); File folder = new
+		 * File(path); String name=""; Scanner scan; readFiles: for (File f :
+		 * folder.listFiles()) { name=f.getName(); try { scan = new Scanner(f);
+		 * 
+		 * } catch (FileNotFoundException e) { // TODO Auto-generated catch
+		 * block MessageBox notLoaded = new MessageBox(ashell, SWT.ICON_ERROR);
+		 * notLoaded.setMessage("Could not read file" + f.getName() + "");
+		 * continue; }
+		 * 
+		 * while (scan.hasNextLine()) { String s = scan.nextLine(); while
+		 * (s.isEmpty()) { if (!scan.hasNextLine()) continue readFiles; s =
+		 * scan.nextLine(); } String face = ""; String back = ""; while
+		 * (!s.startsWith("Answer")) { face += s +
+		 * System.getProperty("line.separator"); s = scan.nextLine(); }
+		 * 
+		 * back += s;
+		 * 
+		 * theCards.add(new FaceCard(face, back)); }
+		 **/
+
+		try {
+			theCards.addAll(new FlashCardIO().loadFaceCards(cardsname,
+					cardsFile.getParent()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		}
+
+		return theCards;
+
+	}
+FaceCard curCard;
+	public void notification(Shell shell,final CardManager manager) {
+		Image image = new Image(shell.getDisplay(),
+				FlashCardGui.class
+						.getResourceAsStream("../accept.png"));
+		final ToolTip tip = new ToolTip(shell, SWT.BALLOON
+				| SWT.ICON_INFORMATION);
+		curCard=manager.getrandCard();
+		tip.setMessage(curCard.getWord());
+		tip.setText(curCard.getAnswer());
+		Tray tray = Display.getDefault().getSystemTray();
+		if (tray != null) {
+			TrayItem item = new TrayItem(tray, SWT.NONE);
+			item.setImage(image);
+			item.setToolTip(tip);
+			final Menu menu = new Menu(shell, SWT.POP_UP);
+			MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+//			menuItem.setText("Button A");
+//			menuItem = new MenuItem(menu, SWT.PUSH);
+//			menuItem.setText("Button B");
+//			menuItem = new MenuItem(menu, SWT.PUSH);
+			menuItem.setText("Quit");
+			menuItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					System.exit(0);
+				}
+			});
+//			tip.setVisible(true);
+			tip.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					// TODO Auto-generated method stub
+					curCard=manager.getrandCard();
+					tip.setText(curCard.getWord());
+					tip.setMessage(curCard.getAnswer());
+					tip.setVisible(true);
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			item.addSelectionListener(new SelectionListener() {
+				
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					// TODO Auto-generated method stub
+					//alternate between showing the tip and not showing it
+					tip.setVisible(tip.isVisible()?false:true);
+				
+				}
+				
+				@Override
+				public void widgetDefaultSelected(SelectionEvent arg0) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			item.addListener(SWT.MenuDetect, new Listener() {
+				public void handleEvent(Event event) {
+					menu.setVisible(true);
+				}
+			});
+		} else {
+			// Set the tooltip location manually.
+			tip.setLocation(100, 100);
+		}
+
+	}
+
+}
