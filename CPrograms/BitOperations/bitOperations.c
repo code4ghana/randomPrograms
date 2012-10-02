@@ -37,3 +37,14 @@ int multiply(int a,int b)
     }
   return tmp;
 }
+
+int count_setbits(int num)
+{
+  int count;
+  while(num)
+    {
+    num&=num-1;
+    count++;
+    }
+  return count;
+}
