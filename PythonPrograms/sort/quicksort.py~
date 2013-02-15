@@ -1,0 +1,11 @@
+def partition(arr,start,end):
+    return 1
+
+def quicksort(arr,start,end):
+    if(start==end):
+        return arr
+    m=partition(arr,start,end)
+    quicksort(arr,start,m)
+    quicksort(arr,m,end)
+    return arr
+    
